@@ -29,9 +29,7 @@ function Events.SendHttpEvent(eventName, ...)
         cb('ok')
     end)
 
-
-    local yo = Citizen.Await(p)
-    return yo
+    return Citizen.Await(p)
 end
 
 exports('SendHttpEvent', Events.SendHttpEvent)

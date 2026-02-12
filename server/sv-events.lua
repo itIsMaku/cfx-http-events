@@ -40,6 +40,8 @@ function Events.RegisterHttpEvent(eventName, callback)
     end
 end
 
+exports('RegisterHttpEvent', Events.RegisterHttpEvent)
+
 function Events.CreateHttpServer()
     SetHttpHandler(function(request, response)
         if request.method ~= 'POST' then

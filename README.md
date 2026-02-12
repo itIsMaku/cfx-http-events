@@ -12,8 +12,8 @@ A FiveM/RedM resource that enables **synchronous HTTP-based events** between cli
 ## Installation
 
 1. Download or clone this repository into your `resources` folder
-2. Rename to `maku_httpevents` (or your preferred name)
-3. Add `ensure maku_httpevents` to your `server.cfg`
+2. Rename to `cfx-http-events` (or your preferred name)
+3. Add `ensure cfx-http-events` to your `server.cfg`
 4. Remove the example scripts from `fxmanifest.lua` if not needed
 
 ## Usage
@@ -21,7 +21,7 @@ A FiveM/RedM resource that enables **synchronous HTTP-based events** between cli
 ### Server-side: Register HTTP Events
 
 ```lua
-Events.RegisterHttpEvent('eventName', function(client, arg1, arg2, ...)
+exports['cfx-http-events']:RegisterHttpEvent('eventName', function(client, arg1, arg2, ...)
     -- client = source (player server ID)
     -- Return any value to send back to the client
     return { success = true, data = "Hello from server!" }
@@ -32,7 +32,7 @@ end)
 ### Client-side: Call HTTP Events
 
 ```lua
-local response = Events.SendHttpEvent('eventName', arg1, arg2, ...)
+local response = exports['cfx-http-events']:SendHttpEvent('eventName', arg1, arg2, ...)
 print(response.data) -- "Hello from server!"
 print(response) -- "Hello, I am example of random value u can return :)"
 ```
@@ -42,7 +42,7 @@ print(response) -- "Hello, I am example of random value u can return :)"
 ### Server (`sv-example.lua`)
 
 ```lua
-Events.RegisterHttpEvent('getPlayerMoney', function(client, account, targetPlayer)
+exports['cfx-http-events']:RegisterHttpEvent('getPlayerMoney', function(client, account, targetPlayer)
     if targetPlayer == nil then
         targetPlayer = client
     end
@@ -60,7 +60,7 @@ end)
 
 ```lua
 RegisterCommand('money', function()
-    local myMoney = Events.SendHttpEvent('getPlayerMoney', 'bank')
+    local myMoney = exports['cfx-http-events']:SendHttpEvent('getPlayerMoney', 'bank')
     if myMoney.success then
         print(('You have $%d in the bank'):format(myMoney.amount))
     else
@@ -73,7 +73,7 @@ end, false)
 
 1. When a client connects, they request a unique authentication key from the server
 2. The server generates a 32-character random key and stores it with the client's source ID
-3. When `Events.SendHttpEvent()` is called, it sends an HTTP POST request to the server via NUI
+3. When `SendHttpEvent()` is called, it sends an HTTP POST request to the server via NUI
 4. The server validates the auth key, executes the registered handler, and returns JSON
 5. The response is passed back to the client through NUI callbacks
 
@@ -81,15 +81,15 @@ end, false)
 
 ### Server
 
-| Function                                   | Description                                                 |
-| ------------------------------------------ | ----------------------------------------------------------- |
-| `Events.RegisterHttpEvent(name, callback)` | Register a server-side event handler that can return values |
+| Function                            | Description                                                 |
+| ----------------------------------- | ----------------------------------------------------------- |
+| `RegisterHttpEvent(name, callback)` | Register a server-side event handler that can return values |
 
 ### Client
 
-| Function                          | Description                                   |
-| --------------------------------- | --------------------------------------------- |
-| `Events.SendHttpEvent(name, ...)` | Call a server event and wait for the response |
+| Function                   | Description                                   |
+| -------------------------- | --------------------------------------------- |
+| `SendHttpEvent(name, ...)` | Call a server event and wait for the response |
 
 ## Security Notes
 
